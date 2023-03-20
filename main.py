@@ -1,9 +1,10 @@
 #!/usr/bin/python3.6
 
-from playground import *
 import sys
-from screen import PLACEHOLDER
 import logging
+
+from screen import PLACEHOLDER
+from playground import *
 
 
 FORMAT = '%(asctime)s::%(levelname)s::%(message)s'
