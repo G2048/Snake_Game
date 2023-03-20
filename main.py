@@ -7,9 +7,8 @@ import logging
 
 
 FORMAT = '%(asctime)s::%(levelname)s::%(message)s'
-logging.basicConfig(filename='snake.log', filemode='w', level=logging.DEBUG, format=FORMAT)
-
-
+logging.basicConfig(filename='snake.log', filemode='w', level=logging.DEBUG,
+                    format=FORMAT)
 
 
 class Snake():
@@ -20,20 +19,14 @@ class Snake():
         self.dx = 0
         self.dy = speed
         self._body_size = 4
-        self.__max_size = 20
-        self.body = '*'
+        self.body = 'O'
         self.__cells = []
-
-    @property
-    def max_size(self):
-        return self.__max_size
 
     @property
     def size_body(self):
         return len(self.__cells)
 
-    @property
-    def cells(self):
+    def get_cells(self):
         for coords in self.__cells:
             yield coords
 
@@ -43,8 +36,6 @@ class Snake():
         if inc: self._body_size += 1
         if self.size_body > self._body_size:
             self.__cells.pop()
-
-
 
 
 class Game(DrawPlayground):
@@ -61,18 +52,17 @@ class Game(DrawPlayground):
            }
 
     MENU_ITEM = {
-                'START': {'name': 'Start here', 'action': 'play', 'inform': 'You choose: PLAY NOW'},
-                'INFO': {'name': 'Description', 'action': 'description', 'inform': 'You choose: INFO'},
-                'EXIT': {'name': 'exit', 'action': 'exit', 'inform': 'you choose: exit!'},
+                'START': {'name': 'Start here', 'action': 'play'},
+                'INFO': {'name': 'Description', 'action': 'description'},
+                'EXIT': {'name': 'exit', 'action': 'exit'},
                 }
-
 
     def __init__(self):
         super().__init__()
         Y, X = self.get_windows_size()
         self.game_height, self.game_width = self.get_center_playground(Y, X)
- 
-    #The manipulation of player speed for auto move the player and swap a move
+
+    # The manipulation of player speed for auto move the player and swap a move
     def capture_motion(self, y, x, *args):
         pass
 
@@ -92,7 +82,6 @@ class Game(DrawPlayground):
         self.stdscr.clear()
         self.main_menu()
 
-
     def exit(self):
         score = 'You score: ' + str(self.SCORE)
         if self.SCORE <= 0:
@@ -110,17 +99,16 @@ class Game(DrawPlayground):
         self.stdscr.getch()
         sys.exit()
 
-
     def main_menu(self):
         ax = self.game_width
         ay = self.game_height
         logging.debug(f'game_width: {ax} game_height: {ay}')
-        count = 0   #Variable for skip the first screen
+        count = 0   # Variable for skip the first screen
 
         while True:
 
             logging.debug(f'Count: {count}')
-            #This code block needing for skip the first empty screen
+            # This code block needing for skip the first empty screen
             if count:
                 logging.debug('Choose key')
                 key = self.stdscr.getch()
@@ -128,13 +116,12 @@ class Game(DrawPlayground):
                 key = 1
                 count = 1
 
-            #To trap and restrict
+            # To trap and restrict
             if key in self.KEYS['DOWN'] and self.CURSOR_ITEM < 3:
                 self.CURSOR_ITEM += 1
             elif key in self.KEYS['UP'] and self.CURSOR_ITEM > 1:
                 self.CURSOR_ITEM -= 1
             logging.info(f'Key: {key}')
-
 
             start_str = self.MENU_ITEM['START']['name']
             info_str = self.MENU_ITEM['INFO']['name']
@@ -156,7 +143,7 @@ class Game(DrawPlayground):
                 choose = 'EXIT'
                 ex_color = self.color_3
 
-            #Clear screen after motion
+            # Clear screen after motion
             self.stdscr.clear()
 
             self.stdscr.bkgd(self.color_1)
@@ -165,8 +152,8 @@ class Game(DrawPlayground):
             self.stdscr.addstr(ay + 2, ax - len(exit_str) // 2, exit_str, ex_color)
 
             if key in self.KEYS['ENTER']:
-                #Why is needed...?
-                #Answer: it's would work if CURSOR_ITEM = 0
+                # Why is needed...?
+                # Answer: it's would work if CURSOR_ITEM = 0
                 if self.CURSOR_ITEM >= 4 or self.CURSOR_ITEM <= 0:
                     # info = 'Return the main menu...'
                     info = 'You find the local secret!'
@@ -188,14 +175,11 @@ class Game(DrawPlayground):
                     return
 
 
-
-
 def play_snake():
     g = Game()
     Y, X = g.get_windows_size()
     logging.debug(f'Size of window: X={X}, Y={Y}')
     g.main_menu()
-
 
     snake = Snake(Y, X//2)
     ITEMS['BACKGROUND'] = ' '
@@ -208,19 +192,17 @@ def play_snake():
     body = snake.size_body
     logging.info(f'Size of body {body}')
 
-    limiter = snake.max_size
-    logging.info(f'Max size: {limiter}')
     count = 0
 
-
     while True:
-        if count % 25:
+        if count % 60:
             snake.x += snake.dx
             snake.y += snake.dy
             snake.shift()
             logging.info(f'Current size: {snake.size_body}')
             logging.debug(f'x: {snake.x}, y: {snake.y}')
 
+            # To null if snake is reached a edge of the frame
             if snake.y >= len(PLAYGROUND):
                 snake.y = 0
                 logging.debug(f'Reset y: {snake.y}')
@@ -233,6 +215,7 @@ def play_snake():
             elif snake.x < 0:
                 snake.x = len(PLAYGROUND[0]) - 1
 
+            # Wait 10 msec for receive a key
             g.stdscr.timeout(10)
             key = g.stdscr.getch()
             logging.info(f'Pressed key: {key}')
@@ -261,21 +244,21 @@ def play_snake():
 
             logging.info(f'dx: {snake.dx}, dy: {snake.dy}')
 
- 
             # g.draw_playground()
-            for y,items_X in enumerate(PLAYGROUND):
-                for x,item in enumerate(items_X):
-                    for sy,sx in snake.cells:
+            for y, items_X in enumerate(PLAYGROUND):
+                for x, item in enumerate(items_X):
+                    for sy, sx in snake.get_cells():
                         if y == sy and x == sx:
                             if sy == eat_y and sx == eat_x:
                                 g.SCORE += 1
                                 logging.info(f'Score: {g.SCORE}')
                                 PLAYGROUND[y][x] = ITEMS['BACKGROUND']
                                 eat_y, eat_x = g.generate_random_obj(Y, X)
-                                #Increment a snake body size
+                                # Increment a snake body size
                                 snake.shift(inc=True)
 
                             item = ITEMS['PLAYER']
+                            # item = snake.body
                     g.stdscr.addstr(y, x, item)
             g.stdscr.refresh()
 
