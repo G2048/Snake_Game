@@ -10,7 +10,7 @@ For startup run [./main.py](https://github.com/G2048/Snake_Game/blob/main/main.p
 ## Screenshots
 
 ### StartScreen
-![start_screen](https://github.com/G2048/Snake_Game/blob/main/images/main_menu_2.png?raw=true)
+![start_screen](https://github.com/G2048/Snake_Game/blob/main/images/main_menu.png?raw=true)
 
 ### Description
 ![description](https://github.com/G2048/Snake_Game/blob/main/images/description.png?raw=true)
