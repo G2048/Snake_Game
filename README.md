@@ -6,6 +6,15 @@ This is The Snake game wrote in Python3.6
 
 For startup run [./main.py](https://github.com/G2048/Snake_Game/blob/main/main.py)
 
+## Control
+
+*w,j* - up
+*s,k* - down
+*a,h* - left
+*d,l* - right
+*o* - *Enter*
+*q* - exit
+
 
 ## Screenshots
 
