@@ -8,17 +8,17 @@ For startup run [./main.py](https://github.com/G2048/Snake_Game/blob/main/main.p
 
 ## Control
 
-*w,j* - up
+- `w` and `j` - up
 
-*s,k* - down
+- `s` and `k` - down
 
-*a,h* - left
+- `a` and `h` - left
 
-*d,l* - right
+- `d` and `l` - right
 
-*o* - *Enter*
+- `o` - Enter
 
-*q* - exit
+- `q` - exit
 
 
 ## Screenshots
